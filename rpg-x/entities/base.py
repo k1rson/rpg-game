@@ -70,6 +70,6 @@ class BaseEntity(ABC):
         self.shield = min(self.max_shield, self.shield + amount)
     
     # Внутренний метод: проверка на возможность нанести критический удар
-    def _roll_crit(self) -> bool:
+    def _roll_crit(self) -> bool: # True/False
         return random.random() < self.crit_chance
         
