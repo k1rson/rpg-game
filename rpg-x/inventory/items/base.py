@@ -1,4 +1,9 @@
-class BaseItem:
+from abc import ABC
+
+from entities.base import BaseEntity
+
+
+class BaseItem(ABC):
     """
     Базовый класс для представления предметов в нашей игре (абстрактный, наследуемый)
 
@@ -22,7 +27,7 @@ class BaseItem:
         if not name:
             raise ValueError("Название предмета не может быть пустым!")
         if max_stack <= 0:
-            raise ValueError("Максимальный стак не может быть меньше 0!")
+            raise ValueError("Максимальный стак не может быть меньше либо равен 0!")
 
         # Основные атрибуты
         self.name = name
@@ -30,5 +35,22 @@ class BaseItem:
         self.stackable = stackable
         self.max_stack = max_stack
 
+    # Один из магических методов: позволяет красиво выводить объект в консоль
     def __str__(self) -> str:
-        pass
+        return f"Item (name: {self.name}, stackable: {self.stackable}, max_stack: {self.max_stack})"
+
+    # Указываем, какие методы мы ОБЯЗАНЫ реализовать в классах наследниках
+    def use(self, entity: BaseEntity) -> bool:
+        raise NotImplementedError(
+            "Метод use() обязан быть реализован в классе наследнике"
+        )
+
+    def is_equippable(self) -> bool:
+        raise NotImplementedError(
+            "Метод is_equippable() обязан быть реализован в классе наследнике"
+        )
+
+    def can_be_consumed(self) -> bool:
+        raise NotImplementedError(
+            "Метод can_be_consumed() обязан быть реализован в классе наследнике"
+        )
