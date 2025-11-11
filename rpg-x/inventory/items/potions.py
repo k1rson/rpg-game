@@ -22,7 +22,7 @@ class HealingPotion(BaseItem):
         if entity.health < entity.max_health:
             entity.heal(amount=self.heal_amount)
             print(
-                f"{entity.name} выпил зелье {self.name} и восстановил {self.heal_amount} HP"
+                f"{entity.name} выпил {self.name} и восстановил здоровье на {self.heal_amount}. Текущее значение: {entity.health}"
             )
             return True
         else:
@@ -56,7 +56,7 @@ class ShieldRecoveryPotion(BaseItem):
         if entity.shield < entity.max_shield:
             entity.restore_shield(amount=self.shield_recovery_amount)
             print(
-                f"{entity.name} выпил зелье восстановления щита и восстановил щит на {self.shield_recovery_amount}."
+                f"{entity.name} выпил {self.name} и восстановил щит на {self.shield_recovery_amount}. Текущее значение: {entity.shield}"
             )
             return True
         else:

@@ -1,4 +1,7 @@
-from base import BaseEntity
+from typing import Optional
+
+from ..base import BaseEntity
+from inventory.inventory import Inventory
 
 
 class PlayerEntity(BaseEntity):
@@ -16,6 +19,7 @@ class PlayerEntity(BaseEntity):
         attack: float = 10.0,
         crit_chance: float = 0.2,
         crit_multiplier: float = 2.0,
+        inventory: Optional[Inventory] = None,
     ) -> None:
         super().__init__(
             name,
@@ -31,3 +35,6 @@ class PlayerEntity(BaseEntity):
             crit_chance,
             crit_multiplier,
         )
+
+        # Инициализация инвентаря
+        self.inventory: Optional[Inventory] = inventory
