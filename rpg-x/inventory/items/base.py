@@ -22,18 +22,26 @@ class BaseItem(ABC):
     """
 
     def __init__(
-        self, name: str, description: str, stackable: bool, max_stack: int
+        self,
+        name: str,
+        description: str,
+        stackable: bool,
+        max_stack: int = 10,
+        quantity: int = 1,
     ) -> None:
         if not name:
             raise ValueError("Название предмета не может быть пустым!")
         if max_stack <= 0:
             raise ValueError("Максимальный стак не может быть меньше либо равен 0!")
+        if quantity <= 0:
+            raise ValueError("Количество предмета не может быть меньше либо равно 0!")
 
         # Основные атрибуты
         self.name = name
         self.description = description
         self.stackable = stackable
         self.max_stack = max_stack
+        self.quantity = quantity
 
     # Один из магических методов: позволяет красиво выводить объект в консоль
     def __str__(self) -> str:

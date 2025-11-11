@@ -36,3 +36,35 @@ class HealingPotion(BaseItem):
     # Метод, указывайющий, может ли предмет быть ИСПОЛЬЗОВАН
     def can_be_consumed(self) -> bool:
         return True  # зелье может быть использовано
+
+
+class ShieldRecoveryPotion(BaseItem):
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        stackable: bool,
+        max_stack: int,
+        shield_recovery_amount: float = 10,
+    ) -> None:
+        super().__init__(name, description, stackable, max_stack)
+
+        # Инициализация базовых атрибутов
+        self.shield_recovery_amount = shield_recovery_amount
+
+    def use(self, entity: BaseEntity) -> bool:
+        if entity.shield < entity.max_shield:
+            entity.restore_shield(amount=self.shield_recovery_amount)
+            print(
+                f"{entity.name} выпил зелье восстановления щита и восстановил щит на {self.shield_recovery_amount}."
+            )
+            return True
+        else:
+            print("Щит полон!")
+            return False
+
+    def is_equippable(self) -> bool:
+        return False
+
+    def can_be_consumed(self) -> bool:
+        return True

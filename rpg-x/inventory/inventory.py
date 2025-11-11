@@ -1,6 +1,6 @@
 from typing import Optional
 
-from inventory.items.base import Item
+from inventory.items.base import BaseItem
 
 
 class Inventory:
@@ -12,63 +12,72 @@ class Inventory:
         self.max_slots = max_slots  # Сколько разных предметов можно хранить в инвентаре
         self.items = []  # список предметов (объекты Items)
 
-    # Внутренний метод: проверяет, есть ли предмет с заданным названием
-    def _find_item(self, name: str) -> Optional[Item]:
+    # Внутренние методы
+    # Поиск предмета в инвентаре по ИМЕНИ
+    def _find_item_by_name(self, name: str) -> Optional[BaseItem]:
         for item in self.items:
             if item.name == name:
                 return item
-
         return None
 
-    # Добавляет предмет в инвентарь
-    def add_item(self, name: str, description: str = "", quantity: int = 1) -> bool:
-        existing_item = self._find_item(name=name)
+    # Поиск предмета в инвентаре по ИНДЕКСУ
+    def _find_item_by_index(self, index: int) -> Optional[BaseItem]:
+        pass
 
-        if existing_item is not None:
-            existing_item.quantity += quantity
-
-            # ТАК ДЕЛАТЬ НЕЛЬЗЯ!!! РЕАЛИЗОВАНО В УЧЕБНЫХ ЦЕЛЯХ!!! СМЕШИВАТЬ ПРЕДСТАВЛЕНИЕ И ЛОГИКУ ЗАПРЕЩЕНО
-            print(
-                f"Добавлено {quantity} шт. '{name}'. Теперь в наличии: {existing_item.quantity}"
+    # Добавление предмета в инвентарь
+    def add_item(self, item: BaseItem) -> bool:
+        if not isinstance(item, BaseItem):
+            raise TypeError(
+                "Многоуважаемый игрок! Нельзя запихивать Рафика и самого себя в инвентарь!"
             )
-        else:
-            if len(self.items) >= self.max_slots:
-                # ТАК ДЕЛАТЬ НЕЛЬЗЯ!!! РЕАЛИЗОВАНО В УЧЕБНЫХ ЦЕЛЯХ!!! СМЕШИВАТЬ ПРЕДСТАВЛЕНИЕ И ЛОГИКУ ЗАПРЕЩЕНО
-                print("Инвентарь заполнен! Нельзя добавить новый предмет!")
+
+        existing = self._find_item_by_name(name=item.name)
+        if existing is not None:
+            # НИЖЕ ПРОВЕРКА НА РАЗНЫЕ ТИПЫ. ЕСЛИ ЭТО РАЗНЫЕ ТИПЫ, СТАКАТЬ ПРЕДМЕТЫ НЕЛЬЗЯ
+            if existing.__class__ is not item.__class__:
+                if self.is_full():  # инвентарь полный, добавить ничего не можем
+                    print(
+                        "Инвентарь заполнен! Добавить новый предмет нельзя! Рафик негодует"
+                    )
+                    return False
+
+                self.items.append(item)
+                return True
+
+            # ЕСЛИ ПРЕДМЕТЫ ОДИНАКОВЫЕ, ТО МЫ МОЖЕМ ИХ СТАКАТЬ
+            new_quantity = existing.quantity + item.quantity
+            if new_quantity <= existing.max_stack:
+                existing.quantity = new_quantity
+                return True
+            else:
+                # определяем свободного места в стаке, сколько можно добавить
+                free_space = existing.max_stack - existing.quantity
+                if free_space > 0:
+                    existing.quantity = existing.max_stack
+                    # Остаток можно добавить, как новый предмет!
+
                 return False
-
-            new_item = Item(
-                name, description, quantity, max_stack=12
-            )  # создаем новый предмет
-            self.items.append(
-                new_item
-            )  # добавляем наш предмет (объект типа Item) в список!
-
-            # ТАК ДЕЛАТЬ НЕЛЬЗЯ!!! РЕАЛИЗОВАНО В УЧЕБНЫХ ЦЕЛЯХ!!! СМЕШИВАТЬ ПРЕДСТАВЛЕНИЕ И ЛОГИКУ ЗАПРЕЩЕНО
-            print(f"Добавлен новый предмет: {name} x{quantity}")
-
-        return True
-
-    # Удаление указанного количества предмета из инвентаря
-    def remove_item(self, name: str, quantity: int = 1) -> bool:
-        existing_item = self._find_item(name)
-
-        if existing_item is None:
-            print(f"Предмет '{name}' не был найден!")
-            return False
-
-        if existing_item.quantity < quantity:
-            print(
-                f"Недостаточно предметов: '{name}'. В наличии: {existing_item.quantity}"
-            )
-            return False
-
-        existing_item.quantity -= quantity
-        if existing_item.quantity == 0:
-            # Если предмет закончился (равен 0) - удаляем его из инвентаря
-            self.items.remove(existing_item)
-            print(f"Предмет '{name}' был полностью удален!")
         else:
-            print(f"Удалено {quantity} шт. Осталось: {existing_item.quantity}")
+            if self.is_full():  # инвентарь заполен
+                print(
+                    "Инвентарь заполнен! Добавить новый предмет нельзя! Рафик негодует"
+                )
+                return False
+            self.items.append(item)
+            return True
 
-        return True
+    def remove_item(self, item_name: str, count: int = 1) -> list[BaseItem]:
+        pass
+
+    def has_item(self, item_name: str) -> bool:
+        pass
+
+    # Проверяет, заполен ли инвентарь (проверка идет по слотам)
+    def is_full(self) -> bool:
+        return len(self.items) >= self.max_slots
+
+    def show(self):
+        pass
+
+    def use_item(self, item_name: str, entity: BaseEntity) -> bool:
+        pass
