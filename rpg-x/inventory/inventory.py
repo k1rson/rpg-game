@@ -1,6 +1,7 @@
 from typing import Optional
 
 from inventory.items.base import BaseItem
+from entities.base import BaseEntity
 
 
 class Inventory:
@@ -26,13 +27,14 @@ class Inventory:
 
     # Добавление предмета в инвентарь
     def add_item(self, item: BaseItem) -> bool:
+        # проверка на то, чтобы переменная item, которую мы передаем в функцию была либо типа BaseItem или его наследником
         if not isinstance(item, BaseItem):
             raise TypeError(
                 "Многоуважаемый игрок! Нельзя запихивать Рафика и самого себя в инвентарь!"
             )
 
         existing = self._find_item_by_name(name=item.name)
-        if existing is not None:
+        if existing is not None:  # проверка на наличие предмета
             # НИЖЕ ПРОВЕРКА НА РАЗНЫЕ ТИПЫ. ЕСЛИ ЭТО РАЗНЫЕ ТИПЫ, СТАКАТЬ ПРЕДМЕТЫ НЕЛЬЗЯ
             if existing.__class__ is not item.__class__:
                 if self.is_full():  # инвентарь полный, добавить ничего не можем
@@ -66,16 +68,45 @@ class Inventory:
             self.items.append(item)
             return True
 
-    def remove_item(self, item_name: str, count: int = 1) -> list[BaseItem]:
-        pass
+    # Данный метод удаляет указанное количество предметов из инвентаря по ИМЕНИ предмета
+    def remove_item(self, item_name: str, count: int = 1) -> bool:
+        if count <= 0:
+            return False
 
-    def has_item(self, item_name: str) -> bool:
-        pass
+        item = self._find_item_by_name(name=item_name)  # ищем предмет по имени
+        if item is None:
+            return False
+
+        # проверяем количество предметов хватает для удаления или нет
+        if item.quantity < count:
+            return False
+
+        item.quantity -= count  # удаляем указанное количество предметов
+
+        # если предметов стало меньше либо равно 0, то полностью удаляем предмет из инвентаря
+        if item.quantity <= 0:
+            self.items.remove(item)
+
+        return True
+
+    # Проверяет, есть ли указанное количество предметов в инвентаре
+    def has_item(self, item_name: str, count: int = 1) -> bool:
+        item = self._find_item_by_name(name=item_name)
+
+        # (ПРЕДМЕТ ЕСТЬ) AND (КОЛ-ВО ПРЕДМЕТОВ БОЛЬШЕ ЗАПРАШИВАЕМОГО)
+        # если два условия True, то результат тоже True
+        # если хотя бы одно из условий False -> функция вернет False
+        return item is not None and item.quantity >= count
+
+    # Возвращает ВСЕ предметы, которые подходят под УКАЗАННЫЙ ТИП
+    def get_items_by_type(self, item_type) -> list[BaseItem]:
+        return [item for item in self.items if isinstance(item, item_type)]
 
     # Проверяет, заполен ли инвентарь (проверка идет по слотам)
     def is_full(self) -> bool:
         return len(self.items) >= self.max_slots
 
+    # Возврещение строкового представления инвентаря
     def show(self):
         pass
 
