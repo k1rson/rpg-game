@@ -1,17 +1,17 @@
 import random
 
-from typing import Optional
+from typing import Optional, Type
 
 from entities.base import BaseEntity
 from inventory.items.base import BaseItem
 
 
-class Location:
+class BaseLocation:
     def __init__(
         self,
         name: str,
         description: str,
-        enemy_types: Optional[list[BaseEntity]],
+        enemy_types: Optional[list[Type[BaseEntity]]],
         enemy_spawn_chance: float = 0.7,
         max_enemies: int = 3,
         loot_table: Optional[list[BaseItem]] = None,
@@ -38,3 +38,33 @@ class Location:
         # Текущее состояние локации (данное состояние будет генерироваться перед каждым входом в локацию)
         self.current_enemies: list[BaseEntity] = []
         self.current_loot: list[BaseItem] = []
+
+    # Внутренние методы класса
+    # Метод отвечает за генерацию контента на локации (враги/лут)
+    def _generate_content(self) -> None:
+        self.current_enemies = []
+        self.current_loot = []
+
+        # Генерация врагов
+        if self.enemy_types and random.random() < self.enemy_spawn_chance:
+            num_enemies = random.randint(
+                1, min(self.max_enemies, len(self.enemy_types))
+            )
+
+            for _ in range(num_enemies):
+                enemy_class = random.choice(self.enemy_types)
+
+                enemy = enemy_class()
+
+    # Базовые методы (поведение каждой локации)
+    # Вызывается при входе на локацию и генерирует контент
+    def enter(self) -> None:
+        pass
+
+    # Метод, позволяющий подбирать предмет с локации по индексу
+    def take_loot(self, index: int) -> Optional[BaseItem]:
+        pass
+
+    # Метод, позволяющий показать какой лут находится сейчас на локации
+    def display_loot(self) -> str:
+        pass
