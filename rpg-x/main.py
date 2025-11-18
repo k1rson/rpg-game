@@ -1,19 +1,59 @@
+# Импорты сущностей и систем
 from entities.player.player import PlayerEntity
 from inventory.inventory import Inventory
-from inventory.items.potions import HealingPotion
+from world.locations.dark_forest import DarkForestLocation
 
 
-healign_potion = HealingPotion(
-    "Зелье варенье", "Чудодейственное зелье Рафика", True, 10
-)
+def main():
+    location = DarkForestLocation()
+    inventory = Inventory()
 
-inventory_player = Inventory()
-player = PlayerEntity(
-    name="Oleg", age=12, gender="M", inventory=inventory_player, health=80
-)
+    player = PlayerEntity(name="Олег", age=12, gender="М", inventory=inventory)
 
-player.inventory.add_item(healign_potion)
-player.inventory.add_item(healign_potion)
+    player.current_location = location
 
-print(player.inventory.show())
-print(player.inventory.use_item_by_index(0, player))
+    # Главный цикл игры
+    while player.health > 0:
+        print(f"☹️  {player.name} | 💪 {player.health}/{player.max_health}")
+
+        loc = player.current_location
+
+        print("-" * 50)
+
+        print("\n ------ Меню ------")
+        print("1. Осмотреть локацию")
+        print("2. Атаковать врага")
+        print("3. Инвентарь")
+        print("4. Использовать предмет из инвентаря")
+        print("5. Подобрать лут")
+        print("6. Выйти")
+
+        choice = input("\n Ваш выбор:").strip()
+        match choice:
+            case "1":
+                print(f"\n 👨🏼‍🦽 {loc.name}")
+                print(f"{loc.description}")
+                print("\n" + loc.display_loot())
+
+                if loc.current_enemies:
+                    print(
+                        f"\n🧙🏼‍♂️ Враги: {', '.join(enemy.name for enemy in loc.current_enemies)}"
+                    )
+                else:
+                    print("\n Врагов не видно!")
+            case "2":
+                pass
+            case "3":
+                print(player.inventory.show())
+            case "4":
+                pass
+            case "5":
+                pass
+            case "6":
+                pass
+            case _:
+                pass
+
+
+if __name__ == "__main__":
+    main()

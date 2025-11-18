@@ -2,6 +2,7 @@ from typing import Optional
 
 from ..base import BaseEntity
 from inventory.inventory import Inventory
+from world.locations.base import BaseLocation
 
 
 class PlayerEntity(BaseEntity):
@@ -38,3 +39,6 @@ class PlayerEntity(BaseEntity):
 
         # Инициализация инвентаря
         self.inventory: Optional[Inventory] = inventory
+
+        # Инициализация локации
+        self.current_location: Optional[BaseLocation] = None

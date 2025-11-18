@@ -1,4 +1,4 @@
-from base import BaseEntity
+from ..base import BaseEntity
 
 
 class GoblinEntity(BaseEntity):
