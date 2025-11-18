@@ -105,28 +105,56 @@ class ShieldBuff(BaseEffect):  # разовый буст для щита
 
 
 class CritChanceDebuff(BaseEffect):  # разовый дебафф для крит. шанса
-    def __init__(self, name: str, duration: int) -> None:
+    def __init__(self, name: str, duration: int, crit_chance_debuff: float) -> None:
         super().__init__(name, duration)
 
+        if crit_chance_debuff <= 0:
+            raise ValueError(
+                "Уменьшить значение крит. шанса на 0 (либо отрицательное значение) невозможно!"
+            )
+
+        self.crit_chance_debuff = crit_chance_debuff
+        self._original_crit_chance: float = 0.0
+
     def on_apply(self, entity: BaseEntity) -> None:
-        return super().on_apply(entity)
+        self._original_crit_chance = entity.crit_chance
+        entity.crit_chance -= self.crit_chance_debuff
 
     def on_tick(self, entity: BaseEntity) -> None:
-        return super().on_tick(entity)
+        pass
 
     def on_remove(self, entity: BaseEntity) -> None:
-        return super().on_remove(entity)
+        if self._original_crit_chance <= 0:
+            raise ValueError(
+                "Невозможно восстановить значение крита, оно не может быть меньше либо равно 0"
+            )
+
+        entity.shield = self._original_crit_chance
 
 
 class CritChanceBuff(BaseEffect):  # разовый бафф для крит. шанса
-    def __init__(self, name: str, duration: int) -> None:
+    def __init__(self, name: str, duration: int, crit_chance_buff: float) -> None:
         super().__init__(name, duration)
 
+        if crit_chance_buff <= 0:
+            raise ValueError(
+                "Увеличить значение крит. шанса на 0 (либо отрицательное значение) невозможно!"
+            )
+
+        self.crit_chance_buff = crit_chance_buff
+        self._original_crit_chance: float = 0.0
+
     def on_apply(self, entity: BaseEntity) -> None:
-        return super().on_apply(entity)
+        self._original_crit_chance = entity.crit_chance
+        entity.crit_chance += self.crit_chance_buff
 
     def on_tick(self, entity: BaseEntity) -> None:
-        return super().on_tick(entity)
+        pass
 
     def on_remove(self, entity: BaseEntity) -> None:
-        return super().on_remove(entity)
+        if self._original_crit_chance <= 0:
+            raise ValueError(
+                "Невозможно восстановить значение крита, оно не может быть меньше либо равно 0"
+            )
+
+        entity.shield = self._original_crit_chance

@@ -2,6 +2,8 @@ import random
 
 from abc import ABC
 
+from effects.effect import BaseEffect
+
 
 class BaseEntity(ABC):
     # Конструктор класса, вызывается ВСЕГДА при создании НОВОГО объекта
@@ -21,22 +23,25 @@ class BaseEntity(ABC):
         crit_multiplier: float = 2.0,  # множитель урона
     ) -> None:
         # Основные атрибуты
-        self.name = name
-        self.age = age
-        self.gender = gender
-        self.entity_type = entity_type
-        self.level = level
+        self.name: str = name
+        self.age: int = age
+        self.gender: str = gender
+        self.entity_type: str = entity_type
+        self.level: int = level
 
         # Основные характеристики
-        self.max_health = max_health
-        self.max_shield = max_shield
+        self.max_health: float = max_health
+        self.max_shield: float = max_shield
 
-        self.health = min(health, max_health)
-        self.shield = min(shield, max_shield)
+        self.health: float = min(health, max_health)
+        self.shield: float = min(shield, max_shield)
 
-        self.attack = attack
-        self.crit_chance = crit_chance
-        self.crit_multiplier = crit_multiplier
+        self.attack: float = attack
+        self.crit_chance: float = crit_chance
+        self.crit_multiplier: float = crit_multiplier
+
+        # Система эффектов
+        self.active_effects: list[BaseEffect] = []
 
     # Получение урона с учетом щита
     def take_damage(self, damage: float) -> None:
@@ -70,6 +75,34 @@ class BaseEntity(ABC):
     # Восстановление щита (принудительное восстановление)
     def restore_shield(self, amount: float) -> None:
         self.shield = min(self.max_shield, self.shield + amount)
+
+    # Добавление эффекта к сущности
+    def add_effect(self, effect: BaseEffect) -> None:
+        # Удаление эффекта по имени
+        self.remove_effect_by_name(effect.name)
+
+        # Применение эффекта (единожды)
+        effect.on_apply(self)
+        self.active_effects.append(effect)  # добавляем эффект к активным
+
+        print(f"{self.name} получил эффект: {effect.name}!")
+
+    # Удаление эффекта по имени
+    def remove_effect_by_name(self, name: str) -> None:
+        for effect in self.active_effects:
+            if effect.name == name:
+                effect.on_remove(self)
+                self.active_effects.remove(effect)
+
+    # Обновление всех эффектов
+    def tick_effects(self) -> None:
+        for effect in self.active_effects:
+            effect.duration -= 1
+            effect.on_tick(self)
+
+            if effect.duration <= 0:
+                effect.on_remove(self)
+                self.active_effects.remove(effect)
 
     # Внутренний метод: проверка на возможность нанести критический удар
     def _roll_crit(self) -> bool:  # True/False
