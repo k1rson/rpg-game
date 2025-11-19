@@ -11,3 +11,6 @@ from entities.enemy import (
     SkeletonEntity,
     SpiderEntity,
 )
+
+# Импорты предметов, инвентаря
+from inventory.inventory import Inventory
