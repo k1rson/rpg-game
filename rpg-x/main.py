@@ -14,3 +14,7 @@ from entities.enemy import (
 
 # Импорты предметов, инвентаря
 from inventory.inventory import Inventory
+from inventory.items import BaseItem, HealingPotion, ShieldRecoveryPotion
+
+# Импорты локаций, квестов, NPC
+from world.locations import BaseLocation, DarkForestLocation
