@@ -1,6 +1,6 @@
 import random
 
-from base import BaseEntity
+from ..base import BaseEntity
 
 
 class DogEntity(BaseEntity):

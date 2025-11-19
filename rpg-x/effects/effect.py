@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING
 
-from entities.base import BaseEntity
+if TYPE_CHECKING:
+    from entities.base import BaseEntity
 
 
 class BaseEffect(ABC):
@@ -26,17 +28,17 @@ class BaseEffect(ABC):
 
     # Применение эффекта один раз
     @abstractmethod  # декоратор
-    def on_apply(self, entity: BaseEntity) -> None:
+    def on_apply(self, entity: "BaseEntity") -> None:
         pass
 
     # Применение эффекта на несколько ходов
     @abstractmethod  # декоратор
-    def on_tick(self, entity: BaseEntity) -> None:
+    def on_tick(self, entity: "BaseEntity") -> None:
         pass
 
     # Снятие эффекта с сущности
     @abstractmethod  # декоратор
-    def on_remove(self, entity: BaseEntity) -> None:
+    def on_remove(self, entity: "BaseEntity") -> None:
         pass
 
     # Магический метод для человекочитаемого отображения объекта класса

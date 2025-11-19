@@ -1,4 +1,4 @@
-from ..entities.base import BaseEntity
+from entities.base import BaseEntity
 from .effect import BaseEffect
 
 

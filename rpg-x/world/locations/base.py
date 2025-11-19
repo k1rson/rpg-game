@@ -112,3 +112,14 @@ class BaseLocation:
             lines.append(f"{i}. {item.name}")
 
         return "\n".join(lines)
+
+    # Метод, позволяющий показать какие враги сейчас находятся на локации
+    def display_enemies(self) -> str:
+        if not self.current_enemies:
+            return f"В локации {self.name} никого нет! Рафик всех сьел"
+
+        lines = ["Вы видите вокруг себя: "]
+        for i, enemy in enumerate(self.current_enemies, 1):
+            lines.append(f"👽 {i}. {enemy.name} | {enemy.level}")
+
+        return "\n".join(lines)

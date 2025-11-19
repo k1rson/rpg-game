@@ -58,7 +58,10 @@ def main():
         # Обработка выбора пункта меню игроком
         match choice:
             case 1:
-                pass
+                print(f"\n 🌍 {loc.name}")
+                print(f"Описание: {loc.description}")
+                print("\n" + loc.display_loot())  # отображение лута
+                print("\n" + loc.display_enemies())  # отображение врагов на локации
             case 2:
                 pass
             case 3:
@@ -67,3 +70,7 @@ def main():
                 pass
             case _:
                 print("Выберите верный пункт меню! (1-4)")
+
+
+if __name__ == "__main__":
+    main()
