@@ -3,8 +3,10 @@ from .effect import BaseEffect
 
 
 class AttackEffect(BaseEffect):
-    def __init__(self, name: str, duration: int, attack_bonus: float) -> None:
-        super().__init__(name, duration)
+    def __init__(
+        self, name: str, description: str, duration: int, attack_bonus: float
+    ) -> None:
+        super().__init__(name, description, duration)
 
         if attack_bonus <= 0:
             raise ValueError("Бонус на атаку не может быть меньше либо равен 0!")
@@ -30,8 +32,10 @@ class AttackEffect(BaseEffect):
 
 
 class PoisonEffect(BaseEffect):
-    def __init__(self, name: str, duration: int, damage_per_tern: float) -> None:
-        super().__init__(name, duration)
+    def __init__(
+        self, name: str, description: str, duration: int, damage_per_tern: float
+    ) -> None:
+        super().__init__(name, description, duration)
 
         if damage_per_tern <= 0:
             raise ValueError("Урон от яда не может быть меньше либо равен 0!")
@@ -53,8 +57,10 @@ class PoisonEffect(BaseEffect):
 
 
 class HealOverTime(BaseEffect):  # эффект заживления ран
-    def __init__(self, name: str, duration: int, heal_per_tern: float) -> None:
-        super().__init__(name, duration)
+    def __init__(
+        self, name: str, description: str, duration: int, heal_per_tern: float
+    ) -> None:
+        super().__init__(name, description, duration)
 
         if heal_per_tern <= 0:
             raise ValueError(
@@ -78,8 +84,10 @@ class HealOverTime(BaseEffect):  # эффект заживления ран
 
 
 class ShieldBuff(BaseEffect):  # разовый буст для щита
-    def __init__(self, name: str, duration: int, shield_bonus: float) -> None:
-        super().__init__(name, duration)
+    def __init__(
+        self, name: str, description: str, duration: int, shield_bonus: float
+    ) -> None:
+        super().__init__(name, description, duration)
 
         if shield_bonus <= 0:
             raise ValueError("Бонус на щит  не может быть меньше либо равен 0!")
@@ -105,8 +113,10 @@ class ShieldBuff(BaseEffect):  # разовый буст для щита
 
 
 class CritChanceDebuff(BaseEffect):  # разовый дебафф для крит. шанса
-    def __init__(self, name: str, duration: int, crit_chance_debuff: float) -> None:
-        super().__init__(name, duration)
+    def __init__(
+        self, name: str, description: str, duration: int, crit_chance_debuff: float
+    ) -> None:
+        super().__init__(name, description, duration)
 
         if crit_chance_debuff <= 0:
             raise ValueError(
@@ -133,8 +143,10 @@ class CritChanceDebuff(BaseEffect):  # разовый дебафф для кри
 
 
 class CritChanceBuff(BaseEffect):  # разовый бафф для крит. шанса
-    def __init__(self, name: str, duration: int, crit_chance_buff: float) -> None:
-        super().__init__(name, duration)
+    def __init__(
+        self, name: str, description: str, duration: int, crit_chance_buff: float
+    ) -> None:
+        super().__init__(name, description, duration)
 
         if crit_chance_buff <= 0:
             raise ValueError(

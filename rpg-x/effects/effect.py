@@ -8,16 +8,18 @@ class BaseEffect(ABC):
         Базовый класс для всех временных эффектов
     Args:
         name: str -> название эффеекта (для отображения)
+        description: str -> описание эффеекта (для отображения)
         duration: int -> продолжительность эффекта (длительность в ходах)
     """
 
-    def __init__(self, name: str, duration: int) -> None:
+    def __init__(self, name: str, description: str, duration: int) -> None:
         # Валидация базовых атрибутов
         if duration <= 0:
             raise ValueError("Длительность эффекта не может быть меньше либо равно 0!")
 
         # Инициализация базовых атрибутов
         self.name = name
+        self.description = description
         self.duration = duration
 
     # Реализация базовых методов для наследования

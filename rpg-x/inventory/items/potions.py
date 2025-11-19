@@ -1,5 +1,9 @@
+import random
+
 from entities.base import BaseEntity
 from .base import BaseItem
+
+from effects.applied_effects import HealOverTime, ShieldBuff
 
 
 class HealingPotion(BaseItem):
@@ -9,12 +13,14 @@ class HealingPotion(BaseItem):
         description: str,
         stackable: bool,
         max_stack: int,
-        heal_amount: float = 10,  # сколько ХП восстанавливает
+        heal_amount: float = 10,  # сколько ХП восстанавливает,
+        chance_apply_effect: float = 0.2,
     ) -> None:
         super().__init__(name, description, stackable, max_stack)
 
         # Инициализируем базовые атрибуты
         self.heal_amount = heal_amount
+        self.chance_apply_effect = chance_apply_effect
 
     # РЕАЛИЗУЕМ МЕТОДЫ, КОТОРЫЕ ОБЯЗАНЫ БЫТЬ РЕАЛИЗОВАННЫМИ
     def use(self, entity: BaseEntity) -> bool:
@@ -24,6 +30,21 @@ class HealingPotion(BaseItem):
             print(
                 f"{entity.name} выпил {self.name} и восстановил здоровье на {self.heal_amount}. Текущее значение: {entity.health}"
             )
+
+            # с какой-то вероятностью накладываем эффект восстановления здоровья
+            if random.random() < self.chance_apply_effect:
+                buff = HealOverTime(
+                    name="Снадобье великана Рафика",
+                    description="Великий бафф великого Рафика для великого отхила",
+                    duration=random.randint(1, 3),
+                    heal_per_tern=random.randint(1, 30),
+                )
+
+                print(
+                    f"Поздравляю! Вы выпили чудодейственное зелье, которое наложило на вас эффект ({buff.name})!"
+                )
+                entity.add_effect(buff)
+
             return True
         else:
             print("HP полны!")
