@@ -76,6 +76,7 @@ class BaseLocation:
                     name=f"{loot_class.__name__}",
                     description="Лучший предмет в игре",
                     stackable=True,
+                    max_stack=10,
                 )
 
                 self.current_loot.append(loot)
