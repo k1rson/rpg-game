@@ -3,6 +3,9 @@ import random
 from typing import Optional
 
 from entities.base import BaseEntity
+from entities.player.player import PlayerEntity
+
+from inventory.items.potions import HealingPotion
 
 
 class Battle:
@@ -10,7 +13,7 @@ class Battle:
     Система пошагового боя
     """
 
-    def __init__(self, player: BaseEntity, enemy: BaseEntity) -> None:
+    def __init__(self, player: PlayerEntity, enemy: BaseEntity) -> None:
         # Инициализация базовых свойств класса
         self.player = player
         self.enemy = enemy
@@ -22,15 +25,15 @@ class Battle:
         print(f"БОЙ: {self.player.name} vs {self.enemy.name}")
         print("-" * 50)
 
-        while self.in_battle and self.player.health > 0 and self.enemy.health > 0:
+        while self.in_battle:
             self._player_turn()
 
-            if self.enemy.health < 0:
+            if self.enemy.health <= 0:
                 self._on_enemy_defeated()
                 break
 
             self._enemy_turn()
-            if self.player.health < 0:
+            if self.player.health <= 0:
                 self._on_player_defeated()
                 break
 
@@ -98,4 +101,9 @@ class Battle:
     def _on_enemy_defeated(self) -> None:
         print(f"\n  {self.enemy.name} повержен вами в бою!")
 
-        # TODO: добавить дроп с врага!
+        healing_potion = HealingPotion(
+            "Зелье здоровья", "Восстанавливает здоровье игрока", True, 10, 20
+        )
+
+        for _ in range(0, 5):
+            self.player.inventory.add_item(healing_potion)
