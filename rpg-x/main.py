@@ -20,41 +20,12 @@ from inventory.items import BaseItem, HealingPotion, ShieldRecoveryPotion
 # Импорты локаций, квестов, NPC
 from world.locations import BaseLocation, DarkForestLocation
 
+# Импорт боевой системы
+from battle.battle_system import Battle
+
 
 def clear_screen():
     os.system("cls" if os.name == "nt" else "clear")
-
-
-def battle(player: PlayerEntity, enemy: BaseEntity):
-    print(f"БОЙ: {player.name} vs {enemy.name}")
-
-    print("-" * 50)
-    input("Нажмите ENTER, чтобы начать легендарный бой")
-
-    while player.health > 0 and enemy.health > 0:
-        dmg = player.deal_damage()
-        enemy.take_damage(dmg)
-
-        print(f"💀 {player.name} нанес {dmg} урона!")
-        if enemy.health <= 0:
-            print(f"{enemy.name} пал в бою! Естестественно!")
-            player.inventory.add_item(
-                HealingPotion(
-                    name="Зелье гиганта Рафика",
-                    description="Оля-ля-ля",
-                    stackable=True,
-                    max_stack=10,
-                )
-            )
-            break
-
-        dmg = enemy.deal_damage()
-        player.take_damage(dmg)
-        print(f"{enemy.name} нанес нам {dmg} урона!")
-
-        input("Нажмите ENTER, для продолжения легендарного боя")
-
-    input("Бой окончен! Нажмите ENTER, чтобы продолжить игру")
 
 
 def main():
@@ -107,7 +78,9 @@ def main():
                 pass
             case 3:
                 if loc.current_enemies:
-                    battle(player, loc.current_enemies[0])
+                    battle = Battle(player, loc.current_enemies[0])
+                    battle.start()
+
                     if loc.current_enemies[0].health <= 0:
                         loc.current_enemies.pop(0)
                 else:

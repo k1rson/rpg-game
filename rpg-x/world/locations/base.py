@@ -57,7 +57,9 @@ class BaseLocation:
                 enemy_class = random.choice(self.enemy_types)
 
                 enemy = enemy_class(
-                    name="Дикий Вепрь",  # TODO пофиксить статичное имя
+                    name=enemy_class.__name__.replace(
+                        "Entity", ""
+                    ),  # TODO пофиксить статичное имя
                     age=random.randint(1, 10),
                     gender=random.choice(["М", "Ж"]),
                     entity_type="Enemy",
