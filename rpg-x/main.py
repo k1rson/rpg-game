@@ -77,6 +77,12 @@ def main():
             case "2":
                 print(player.inventory.show())
 
+                choice = input("Выберите предмет для использования: ")
+                try:
+                    player.inventory.use_item_by_index(int(choice) - 1, player)
+                except Exception as exc:
+                    print(f"Ошибка использования предмета: {exc}")
+
                 input("\n (Нажмите ENTER для продолжения...)")
             case "3":
                 if loc.current_enemies:
@@ -94,8 +100,8 @@ def main():
                     except Exception as exc:
                         print(f"Проблема: {exc}")
 
-                    if loc.current_enemies[0].health <= 0:
-                        loc.current_enemies.pop(0)
+                    if loc.current_enemies[int(choice) - 1].health <= 0:
+                        loc.current_enemies.pop(int(choice) - 1)
 
                     input("\n (Нажмите ENTER для продолжения...)")
                 else:
