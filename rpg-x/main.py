@@ -61,11 +61,11 @@ def main():
         print("3. Атаковать врага")
         print("4. Выйти")
 
-        choice = int(input("\n Ваш выбор: ").strip())
+        choice = input("\n Ваш выбор: ").strip()
 
         # Обработка выбора пункта меню игроком
         match choice:
-            case 1:
+            case "1":
                 print(f"\n 🌍 {loc.name}")
                 print(f"Описание: {loc.description}")
                 print("\n" + loc.display_loot() + "\n")  # отображение лута
@@ -74,19 +74,34 @@ def main():
                 )  # отображение врагов на локации
 
                 input("\n (Нажмите ENTER для продолжения...)")
-            case 2:
-                pass
-            case 3:
+            case "2":
+                print(player.inventory.show())
+
+                input("\n (Нажмите ENTER для продолжения...)")
+            case "3":
                 if loc.current_enemies:
-                    battle = Battle(player, loc.current_enemies[0])
-                    battle.start()
+                    lines = [f"Враги на локации ({(len(loc.current_enemies))}): "]
+
+                    for i, enemy in enumerate(loc.current_enemies, 1):
+                        lines.append(f"{i}. {enemy.name} L:{enemy.level}")
+
+                    print("\n".join(lines))
+
+                    choice = input("Выберите врага, которого желаете атаковать: ")
+                    try:
+                        battle = Battle(player, loc.current_enemies[int(choice) - 1])
+                        battle.start()
+                    except Exception as exc:
+                        print(f"Проблема: {exc}")
 
                     if loc.current_enemies[0].health <= 0:
                         loc.current_enemies.pop(0)
+
+                    input("\n (Нажмите ENTER для продолжения...)")
                 else:
                     print("НЕМА ВРАГОВ")
                     input("\n (Нажмите ENTER для продолжения...)")
-            case 4:
+            case "4":
                 pass
             case _:
                 print("Выберите верный пункт меню! (1-4)")
