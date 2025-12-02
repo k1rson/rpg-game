@@ -10,7 +10,7 @@ from inventory.items.potions import HealingPotion, ShieldRecoveryPotion
 class DarkForestLocation(BaseLocation):
     def __init__(self) -> None:
         super().__init__(
-            name="Темный-темный",
+            name="Темный лес",
             description="Густой, темный и зловещий лес... Где-то в кустах шуршит... Дядя Амаль",
             enemy_types=[BearEntity, SpiderEntity, GoblinEntity],
             enemy_spawn_chance=0.8,

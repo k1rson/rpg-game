@@ -18,7 +18,7 @@ from inventory.inventory import Inventory
 from inventory.items import BaseItem, HealingPotion, ShieldRecoveryPotion
 
 # Импорты локаций, квестов, NPC
-from world.locations import BaseLocation, DarkForestLocation
+from world.locations import BaseLocation, DarkForestLocation, MainTownLocation
 
 # Импорт боевой системы
 from battle.battle_system import Battle
@@ -39,13 +39,15 @@ def main():
 
     # Создаем локации
     forest = DarkForestLocation()  # TODO: поправить конструктор локации "Темный лес"
+    town = MainTownLocation()
+
+    locations = [forest, town]
 
     # Прикрепляем локацию к игроку
-    player.current_location = forest
+    player.current_location = locations[0]  # стартовая локация -> лес
 
     # Получим текущую локацию игрока для генерации
     loc = player.current_location
-    loc.enter()
 
     # Главный цикл игры
     while player.health > 0:
@@ -59,19 +61,20 @@ def main():
         print("1. Осмотреть локацию")
         print("2. Осмотреть инвентарь")
         print("3. Атаковать врага")
-        print("4. Выйти")
+        print("4. Телепорт")
+        print("5. Выйти")
 
         choice = input("\n Ваш выбор: ").strip()
 
         # Обработка выбора пункта меню игроком
         match choice:
             case "1":
+                loc.enter()
                 print(f"\n 🌍 {loc.name}")
                 print(f"Описание: {loc.description}")
                 print("\n" + loc.display_loot() + "\n")  # отображение лута
-                print(
-                    "\n" + loc.display_enemies() + "\n"
-                )  # отображение врагов на локации
+                print("\n" + loc.display_enemies() + "\n")  # отображение врагов
+                print("\n" + loc.display_npc() + "\n")  # отображение NPC на локации
 
                 input("\n (Нажмите ENTER для продолжения...)")
             case "2":
@@ -108,9 +111,28 @@ def main():
                     print("НЕМА ВРАГОВ")
                     input("\n (Нажмите ENTER для продолжения...)")
             case "4":
+                lines = [f"Доступные локации ({(len(locations))}): "]
+
+                for i, loc in enumerate(locations, 1):
+                    lines.append(f"{i}. {loc.name}")
+
+                print("\n".join(lines))
+
+                choice = input(
+                    "Выберите локацию, в которую желаете телепортироваться: "
+                )
+
+                try:
+                    player.current_location = locations[int(choice) - 1]
+                except Exception as exc:
+                    print(
+                        f"Телепорт не удался! Попробуйте выбрать другую локацию. Ошибка: {exc}"
+                    )
+
+            case "5":
                 exit()
             case _:
-                print("Выберите верный пункт меню! (1-4)")
+                print("Выберите верный пункт меню! (1-5)")
 
 
 if __name__ == "__main__":

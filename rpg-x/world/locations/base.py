@@ -12,6 +12,7 @@ class BaseLocation:
         name: str,
         description: str,
         enemy_types: Optional[list[Type[BaseEntity]]] = None,
+        npc_types: Optional[list[Type[BaseEntity]]] = None,
         enemy_spawn_chance: float = 0.7,
         max_enemies: int = 3,
         loot_table: Optional[list[Type[BaseItem]]] = None,
@@ -28,6 +29,9 @@ class BaseLocation:
         self.enemy_spawn_chance = enemy_spawn_chance
         self.max_enemies = max_enemies
 
+        # NPC
+        self.npc_types = npc_types
+
         # Лут
         self.loot_table = loot_table
         self.loot_spawn_chance = loot_spawn_chance
@@ -39,6 +43,7 @@ class BaseLocation:
 
         # Текущее состояние локации (данное состояние будет генерироваться перед каждым входом в локацию)
         self.current_enemies: list[BaseEntity] = []
+        self.current_npc: list[BaseEntity] = []
         self.current_loot: list[BaseItem] = []
 
     # Внутренние методы класса
@@ -124,5 +129,15 @@ class BaseLocation:
         lines = ["Вы видите вокруг себя: "]
         for i, enemy in enumerate(self.current_enemies, 1):
             lines.append(f"👽 {i}. {enemy.name} | {enemy.level}")
+
+        return "\n".join(lines)
+
+    def display_npc(self) -> str:
+        if not self.current_npc:
+            return f"В локации {self.name} никого нет! Рафик всех сьел"
+
+        lines = ["В цветущем городе Химки проживают: "]
+        for i, npc in enumerate(self.current_npc, 1):
+            lines.append(f"🤓 {i}. {npc.name} | {npc.level}")
 
         return "\n".join(lines)
