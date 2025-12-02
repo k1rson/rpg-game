@@ -3,6 +3,7 @@ from typing import Optional
 from ..base import BaseEntity
 from inventory.inventory import Inventory
 from world.locations.base import BaseLocation
+from world.quests.quest_system import QuestSystem
 
 
 class PlayerEntity(BaseEntity):
@@ -42,3 +43,6 @@ class PlayerEntity(BaseEntity):
 
         # Инициализация локации
         self.current_location: Optional[BaseLocation] = None
+
+        # Инициализация системы квестов персонажа
+        self.quests = QuestSystem()

@@ -1,4 +1,8 @@
-from entities.player.player import PlayerEntity
+from typing import TYPE_CHECKING
+
+
+if TYPE_CHECKING:
+    from entities.player.player import PlayerEntity
 
 
 class Quest:
@@ -17,10 +21,10 @@ class Quest:
 
     # Методы классса (поведение класса)
     # Проверяет, выполнен ли квест
-    def can_complete(self, player: PlayerEntity):
+    def can_complete(self, player: "PlayerEntity"):
         if "has_item" in self.requirements:
             item = self.requirements["has_item"]
-            if item not in player.inventory:
+            if item not in player.inventory.items:
                 return False
 
         return True
@@ -29,7 +33,7 @@ class Quest:
         # Иные проверки на выполнение квеста
 
     # Выполнить квест -> выдать награду
-    def complete(self, player: PlayerEntity):
+    def complete(self, player: "PlayerEntity"):
         if not self.completed and self.can_complete(player):
             self.completed = True
 

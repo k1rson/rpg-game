@@ -16,12 +16,16 @@ from entities.enemy import (
 # Импорты предметов, инвентаря
 from inventory.inventory import Inventory
 from inventory.items import BaseItem, HealingPotion, ShieldRecoveryPotion
+from inventory.items.quests import QuestKey
 
 # Импорты локаций, квестов, NPC
 from world.locations import BaseLocation, DarkForestLocation, MainTownLocation
 
 # Импорт боевой системы
 from battle.battle_system import Battle
+
+# Импорт систеиы квестов
+from world.quests.quest import Quest
 
 
 def clear_screen():
@@ -36,6 +40,29 @@ def main():
     player = PlayerEntity(
         name="КириллЧудотворец", age=12, gender="М", inventory=player_inventory
     )
+
+    # Создаем квестовый предмет
+    quest_key = QuestKey()
+
+    # Создаем базовый квест
+    key_quest = Quest(
+        qid=1,
+        name="Найди ключ",
+        description="Ключ от входа в город находится рядом с тобой",
+        requirements={"has_item": quest_key},
+        reward={
+            "item": HealingPotion(
+                name="Зелье восстановления",
+                description="Отличное зелье для восстановления ХП",
+                stackable=True,
+                max_stack=10,
+            )
+        },
+    )
+
+    # Выдаем квест игроку
+    player.quests.add_quest(key_quest)
+    player.quests.activate(1)
 
     # Создаем локации
     forest = DarkForestLocation()  # TODO: поправить конструктор локации "Темный лес"
